@@ -13,6 +13,8 @@ let winningGrid = [
 let turns, lastGrid;
 reset();
 
+let winningGames = []
+
 function reset() {
     lastGrid = starting;
     turns = [
@@ -22,9 +24,23 @@ function reset() {
 }
 
 
+/*
+start .... end
+a, b, c, d, e, f
+
+winningGames = {
+    e: [e, f],
+    d: [d, e, f],
+    
+}
+
+a, b, e, f  // grab e, f from above
+*/
 
 
-let targetCount = 6;
+
+
+let targetCount = 10;
 
 let attemptCount = 0;
 
@@ -56,8 +72,29 @@ function attempt() {
             attempt();
             break;
         }
+
+        // See if this grid has a matching
+        // winning sequence, that would
+        // get us a best attempt
+        const matchingSequence = winningGames[nextGrid];
+        if (matchingSequence) {
+            // see if this match would hit our target
+            let borrowedSequence = [...turns, ...matchingSequence.slice(1)];
+            if (borrowedSequence.length)
+        }
+
         
         if (isWinner(nextGrid)) {
+
+            // save all the winning sequences
+            // so we can maybe shortcut
+            // another attempt
+            for (let i in turns) {
+                let [r, c, g] = turns[i];
+                winningGames[g] = turns.slice(i);
+            }
+
+
             logTurns(turns);
             console.log(`Complete in ${turns.length} turns! (${attemptCount} attempts)`)
             return;
