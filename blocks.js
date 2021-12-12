@@ -16,46 +16,58 @@ reset();
 function reset() {
     lastGrid = starting;
     turns = [
-        [null, null, starting]
+        // [row, column, grid]
+        [null, null, starting]      // first turn
     ]
 }
 
-
-function gridString(grid) {
-    return JSON.stringify(grid);
-}
 
 
 let bestCount = Infinity;
 let bestTurns;
 
-let targetCount = 7;
+let targetCount = 6;
+
+let attemptCount = 0;
 
 attempt();
 
 function attempt() {
+    attemptCount++;
+    if (attemptCount % 10 === 0) {
+        console.log(`attempt ${attemptCount}`);
+    }
+    if (attemptCount > 5000) {
+        console.log('I give up 😢');
+        return;
+    }
     
     while(true) {
         // take a random turn
         let [nextGrid, row, col] = randomTurn(lastGrid);
-        //log(nextGrid);
         
+        // Save the turn
         turns.push([row, col, nextGrid]);
         lastGrid = nextGrid;
         
         if (isWinner(nextGrid)) {
             let turnCount = turns.length;
 
+            // New best!
             if (turnCount < bestCount) {
                 bestCount = turnCount;
                 bestTurns = turns;
                 console.log('best:', turnCount)
             }
+
+            // If we completed in fewer turns than
+            // our target, be done
             if (bestCount <= targetCount) {
                 console.log(`Less than ${targetCount}!`)
                 logTurns(turns);
                 return;
             }
+            // Otherwise, try again, with clean data
             else {
                 reset();
                 attempt();
@@ -63,7 +75,10 @@ function attempt() {
             break;
         }
         
-        if (Object.keys(turns).length >= 10000) {
+        // We didn't do it in few enough turns, try again
+        if (turns.length > targetCount) {
+            reset();
+            attempt();
             break;
         }
     }
@@ -134,6 +149,7 @@ function turn(grid, row, col) {
 // Swap the cell, if it exists
 // mutates grid
 function swapCell(grid, row, col) {
+    // Make sure it's a valid cell number
     if (row >= 0 && col >= 0 && row <= 2 && col <= 2) {
         grid[row][col] = swap(grid[row][col]);
     }
