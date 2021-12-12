@@ -1,13 +1,13 @@
 const starting = [
+    [1, 1, 1],
     [0, 0, 1],
-    [1, 0, 0],
-    [1, 0, 1],
+    [0, 0, 1],
 ];
 
 let winningGrid = [
-    [1, 0, 1],
-    [1, 1, 1],
-    [0, 0, 1]
+    [1, 1, 0],
+    [0, 1, 0],
+    [1, 1, 1]
 ];
 
 let turns, lastGrid;
@@ -119,10 +119,10 @@ function turn(grid, row, col) {
     
     // swap that cell
     swapCell(grid, row, col);   // the cell
-    swapCell(grid, row - 1, col); // above
-    swapCell(grid, row + 1, col); // below
-    swapCell(grid, row, col - 1); // left
-    swapCell(grid, row, col + 1); // right
+    swapCell(grid, row - 1, col - 1); // above
+    swapCell(grid, row - 1, col + 1); // below
+    swapCell(grid, row + 1, col - 1); // left
+    swapCell(grid, row + 1, col + 1); // right
     
     return grid;
 }
