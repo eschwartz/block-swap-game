@@ -23,8 +23,6 @@ function reset() {
 
 
 
-let bestCount = Infinity;
-let bestTurns;
 
 let targetCount = 6;
 
@@ -49,37 +47,20 @@ function attempt() {
         // Save the turn
         turns.push([row, col, nextGrid]);
         lastGrid = nextGrid;
-        
-        if (isWinner(nextGrid)) {
-            let turnCount = turns.length;
 
-            // New best!
-            if (turnCount < bestCount) {
-                bestCount = turnCount;
-                bestTurns = turns;
-                console.log('best:', turnCount)
-            }
 
-            // If we completed in fewer turns than
-            // our target, be done
-            if (bestCount <= targetCount) {
-                console.log(`Less than ${targetCount}!`)
-                logTurns(turns);
-                return;
-            }
-            // Otherwise, try again, with clean data
-            else {
-                reset();
-                attempt();
-            }
-            break;
-        }
         
         // We didn't do it in few enough turns, try again
         if (turns.length > targetCount) {
             reset();
             attempt();
             break;
+        }
+        
+        if (isWinner(nextGrid)) {
+            logTurns(turns);
+            console.log(`Complete in ${turns.length} turns! (${attemptCount} attempts)`)
+            return;
         }
     }
 }
