@@ -1,7 +1,7 @@
 const starting = [
+    [0, 0, 1],
     [0, 0, 0],
     [1, 0, 0],
-    [0, 0, 0],
 ];
 
 let winningGrid = [
@@ -18,7 +18,7 @@ function reset() {
     turns = {
         [gridString(starting)]: null,
         //[gridString(starting)]: [row, col, prevGridString],
-        // 'gridString': [row, col]
+        // 'gridString': [row, col, prevGridString]
     }
 }
 
@@ -59,7 +59,7 @@ function attempt() {
                 console.log('best:', turnCount)
             }
             if (bestCount <= targetCount) {
-                console.log(`Less than ${5}!`)
+                console.log(`Less than ${targetCount}!`)
                 logTurns(turns);
                 return;
             }
@@ -78,13 +78,15 @@ function attempt() {
 
 
 function logTurns(turns) {
-    for (let turn of Object.values(turns)) {
+    log(starting);
+    for (let [nextGridString, turn] of Object.entries(turns)) {
         if (!turn) {
             continue;
         }
-        let [row, col, gridString] = turn;
+        let [row, col, prevGridString] = turn;
+        let nextGrid = JSON.parse(nextGridString);
         console.log(row, col);
-        log(JSON.parse(gridString));
+        log(nextGrid);
     }
 }
 
