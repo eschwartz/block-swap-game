@@ -1,7 +1,7 @@
 const starting = [
     [0, 0, 1],
-    [0, 0, 0],
     [1, 0, 0],
+    [1, 0, 1],
 ];
 
 let winningGrid = [
@@ -15,11 +15,9 @@ reset();
 
 function reset() {
     lastGrid = starting;
-    turns = {
-        [gridString(starting)]: null,
-        //[gridString(starting)]: [row, col, prevGridString],
-        // 'gridString': [row, col, prevGridString]
-    }
+    turns = [
+        [null, null, starting]
+    ]
 }
 
 
@@ -31,7 +29,7 @@ function gridString(grid) {
 let bestCount = Infinity;
 let bestTurns;
 
-let targetCount = 10;
+let targetCount = 7;
 
 attempt();
 
@@ -42,16 +40,11 @@ function attempt() {
         let [nextGrid, row, col] = randomTurn(lastGrid);
         //log(nextGrid);
         
-        if (turns[gridString(nextGrid)]) {
-            //console.log('already done');
-            //break;
-        }
-        
-        turns[gridString(nextGrid)] = [row, col, gridString(lastGrid)];
+        turns.push([row, col, nextGrid]);
         lastGrid = nextGrid;
         
         if (isWinner(nextGrid)) {
-            let turnCount = Object.keys(turns).length;
+            let turnCount = turns.length;
 
             if (turnCount < bestCount) {
                 bestCount = turnCount;
@@ -78,15 +71,10 @@ function attempt() {
 
 
 function logTurns(turns) {
-    log(starting);
-    for (let [nextGridString, turn] of Object.entries(turns)) {
-        if (!turn) {
-            continue;
-        }
-        let [row, col, prevGridString] = turn;
-        let nextGrid = JSON.parse(nextGridString);
+    //log(starting);
+    for (let [row, col, grid] of turns) {
         console.log(row, col);
-        log(nextGrid);
+        log(grid);
     }
 }
 
@@ -105,7 +93,7 @@ function isWinner(grid) {
 function randomTurn(grid) {
     let row = randomIndex();
     let col = randomIndex();
-    return [turn(grid, randomIndex(), randomIndex()), row, col];
+    return [turn(grid, row, col), row, col];
 }
 
 function randomIndex() { // min and max included 
