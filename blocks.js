@@ -1,16 +1,17 @@
 const starting = [
-    [1, 1, 1],
-    [0, 0, 1],
-    [0, 0, 1],
+    [1, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
 ];
 
 let winningGrid = [
-    [1, 1, 0],
-    [0, 1, 0],
-    [1, 1, 1]
+    [1, 0, 1],
+    [1, 1, 1],
+    [0, 0, 1]
 ];
 
 let turns, lastGrid;
+let attemptedTurns = 0;
 reset();
 
 function reset() {
@@ -59,7 +60,11 @@ function attempt() {
         
         if (isWinner(nextGrid)) {
             logTurns(turns);
-            console.log(`Complete in ${turns.length} turns! (${attemptCount} attempts)`)
+            console.log(`
+Solved in ${turns.length} turns 🎉
+${attemptCount} game attempts
+${attemptedTurns} total turns taken
+            `)
             return;
         }
     }
@@ -69,7 +74,9 @@ function attempt() {
 function logTurns(turns) {
     //log(starting);
     for (let [row, col, grid] of turns) {
-        console.log(row, col);
+        if (row !== null && col !== null) {
+            console.log(`\nClick on row ${row}, col ${col}`);
+        }
         log(grid);
     }
 }
@@ -110,6 +117,8 @@ function log(grid) {
 }
 
 function turn(grid, row, col) {
+    attemptedTurns++;
+
     // copy grid
     grid = [
         [...grid[0]],
@@ -119,10 +128,10 @@ function turn(grid, row, col) {
     
     // swap that cell
     swapCell(grid, row, col);   // the cell
-    swapCell(grid, row - 1, col - 1); // above
-    swapCell(grid, row - 1, col + 1); // below
-    swapCell(grid, row + 1, col - 1); // left
-    swapCell(grid, row + 1, col + 1); // right
+    swapCell(grid, row - 1, col); // above
+    swapCell(grid, row + 1, col); // below
+    swapCell(grid, row, col - 1); // left
+    swapCell(grid, row, col + 1); // right
     
     return grid;
 }
